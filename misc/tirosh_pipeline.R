@@ -89,7 +89,11 @@ names(meta.info) <- row.names(meta.info.tmp)
 myproject@misc$meta.info <- meta.info
 
 ## set cell ident
-cell_ident <- droplevels(df.ident$Cluster)
+if (class(df.ident$Cluster) == 'factor') {
+    cell_ident <- droplevels(df.ident$Cluster)
+} else {
+    cell_ident <- df.ident$Cluster
+}
 names(cell_ident) <- rownames(df.ident)
 myproject[["Tirosh.ident"]] <- cell_ident
 Idents(myproject) <- myproject[["Tirosh.ident"]]
