@@ -9,6 +9,6 @@
 
 library(periscope)
 library(shinyBS)
-
+library(revealsc)
 
 source(paste("program", "global.R", sep = .Platform$file.sep), local = TRUE)

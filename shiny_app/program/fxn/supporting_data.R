@@ -25,7 +25,19 @@ load_data <- function(file) {
     error_messages <- list()
 
     tryCatch({
-        object         <- readRDS(file$datapath)
+        object_orig         <- readRDS(file$datapath)
+        
+        message("Loading from scidb instead of user supplied RDS")
+        creds_file = '~/.scidb_auth_secure_user2'
+        revealsc_connect(username = read_json(creds_file)$`user-name`, 
+                         password = read_json(creds_file)$`user-password`,
+                         result_size_limit = 4*1048) # To allow downloads up to 4 GB
+        object = revealsc_search_expression(
+            matrix_count='normalized', 
+            projectid='pancreas__baron16', 
+            sampleid='sample1', 
+            returnType = 'Seurat_object')
+        browser()
     }, error = function(e) {
         if (e$message == "unknown input format") {
             error_messages[[g_error_field]] <<- get_file_upload_error_message(file, "is not in the correct format.")
